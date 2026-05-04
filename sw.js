@@ -1,21 +1,23 @@
-// Apotheosis service worker — offline-first shell + asset caching.
-// NetworkFirst for HTML navigations (so deploys propagate),
-// CacheFirst for static assets (icons, manifest, css/js bundles).
+// Apotheosis service worker — fixed for GitHub Pages subfolder deployment.
 
-const VERSION = "apo-v1";
+const VERSION = "apo-v2";
 const HTML_CACHE = `${VERSION}-html`;
 const ASSET_CACHE = `${VERSION}-assets`;
 
+const BASE = "/apotheosis";
+
+const PRECACHE = [
+  `${BASE}/`,
+  `${BASE}/index.html`,
+  `${BASE}/manifest.webmanifest`,
+  `${BASE}/icon-192.png`,
+  `${BASE}/icon-512.png`,
+];
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(ASSET_CACHE).then((c) =>
-      c.addAll([
-        "/",
-        "/manifest.webmanifest",
-        "/icon-192.png",
-        "/icon-512.png",
-      ]).catch(() => {})
-    )
+    caches.open(ASSET_CACHE)
+      .then((c) => c.addAll(PRECACHE).catch(() => {}))
   );
   self.skipWaiting();
 });
@@ -35,32 +37,36 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
 
   const url = new URL(req.url);
+
+  // Let external requests (Google Fonts, CDNs, Anthropic API) pass through untouched
   if (url.origin !== self.location.origin) return;
 
-  // HTML / navigation → NetworkFirst with offline fallback
+  // Only handle requests within our scope
+  if (!url.pathname.startsWith(BASE)) return;
+
   const isNav = req.mode === "navigate" ||
     (req.headers.get("accept") || "").includes("text/html");
 
   if (isNav) {
+    // HTML: NetworkFirst so updates propagate, fallback to cache offline
     event.respondWith((async () => {
       try {
         const fresh = await fetch(req);
         const cache = await caches.open(HTML_CACHE);
-        cache.put("/", fresh.clone()).catch(() => {});
+        cache.put(req.url, fresh.clone()).catch(() => {});
         return fresh;
       } catch {
-        const cache = await caches.open(HTML_CACHE);
-        const cached = await cache.match("/");
+        const cached = await caches.match(req.url)
+          || await caches.match(`${BASE}/index.html`)
+          || await caches.match(`${BASE}/`);
         if (cached) return cached;
-        const asset = await caches.match("/");
-        if (asset) return asset;
         return new Response("Offline", { status: 503, statusText: "Offline" });
       }
     })());
     return;
   }
 
-  // Static assets → CacheFirst, populate on miss
+  // Static assets: CacheFirst, populate on miss
   event.respondWith((async () => {
     const cached = await caches.match(req);
     if (cached) return cached;
@@ -72,7 +78,7 @@ self.addEventListener("fetch", (event) => {
       }
       return res;
     } catch {
-      return cached || new Response("Offline asset", { status: 503 });
+      return new Response("Offline asset", { status: 503 });
     }
   })());
 });
