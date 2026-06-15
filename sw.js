@@ -1,6 +1,6 @@
 // Apotheosis service worker — fixed for GitHub Pages subfolder deployment.
 
-const VERSION = "apo-v2";
+const VERSION = "apo-v6";
 const HTML_CACHE = `${VERSION}-html`;
 const ASSET_CACHE = `${VERSION}-assets`;
 
