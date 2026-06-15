@@ -83,7 +83,7 @@ body{
   display:flex;height:calc(var(--nh) + var(--sb));padding-bottom:var(--sb);z-index:100;
 }
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:none;background:transparent;cursor:pointer;min-height:44px;position:relative;transition:all .18s;}
-.ni::after{content:'';position:absolute;bottom:calc(var(--sb) + 5px);left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--gold);border-radius:100px;opacity:0;transition:opacity .18s,width .18s;}
+.ni::after{content:'';position:absolute;bottom:calc(var(--sb) + 5px);left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--gold);border-radius:100px;opacity:0;transition:opacity .18s,width .18s;pointer-events:none;}
 .ni.active::after{opacity:1;width:28px;}
 .ni.active .nic,.ni.active .nil{color:var(--gold);}
 .nic{font-size:18px;color:var(--mut);transition:color .18s;filter:none;}
@@ -151,7 +151,7 @@ select.inp option{background:var(--card2);}
   transition:all .18s cubic-bezier(.4,0,.2,1);min-height:46px;
   position:relative;overflow:hidden;
 }
-.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .15s;}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .15s;pointer-events:none;}
 .btn:active::after{background:rgba(255,255,255,.05);}
 .btn:active{transform:scale(.97);}
 .btng{
@@ -1350,7 +1350,7 @@ input[type=range]::-webkit-slider-thumb:active{transform:scale(1.15);}
 <script>
 'use strict';
 const G=id=>document.getElementById(id);
-try{if('serviceWorker'in navigator){const swCode=`const CACHE='apo-v6';self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll([]))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));}`;const blob=new Blob([swCode],{type:'application/javascript'});navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});}}catch(e){}
+try{if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}}catch(e){}
 const upOnline=()=>G('offbar').classList.toggle('show',!navigator.onLine);
 window.addEventListener('online',upOnline);window.addEventListener('offline',upOnline);upOnline();
 
