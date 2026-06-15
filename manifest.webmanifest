@@ -6,8 +6,8 @@
   "scope": "/apotheosis/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0a0807",
-  "theme_color": "#0a0807",
+  "background_color": "#080604",
+  "theme_color": "#080604",
   "icons": [
     {
       "src": "/apotheosis/icon-192.png",
