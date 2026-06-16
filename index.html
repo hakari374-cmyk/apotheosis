@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-  /* ─── Apollo dark+gold design tokens ──────────────────────────── */
+  /* ─── Design tokens ───────────────────────────────────────────── */
   :root{
     --bg:oklch(.16 .012 60);
     --bg-2:oklch(.19 .014 60);
@@ -33,6 +33,7 @@
     --font-display:"Cinzel",Georgia,serif;
     --font-serif:"Crimson Pro",Georgia,serif;
     --font-mono:"JetBrains Mono",ui-monospace,monospace;
+    --nav-h:calc(64px + env(safe-area-inset-bottom));
   }
   *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--cream);font-family:var(--font-serif);overscroll-behavior:none;}
@@ -41,22 +42,23 @@
     background-image:
       radial-gradient(ellipse 80% 50% at 50% -10%,oklch(.78 .13 80 / .05) 0%,transparent 70%),
       radial-gradient(ellipse 60% 40% at 80% 110%,oklch(.7 .15 55 / .04) 0%,transparent 60%);
-    padding-bottom:calc(80px + env(safe-area-inset-bottom));
+    padding-bottom:var(--nav-h);
     padding-top:env(safe-area-inset-top);
   }
   h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:.02em;margin:0;font-weight:600;}
   p{margin:0;}
   button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;}
-  input,textarea,select{font-family:inherit;color:inherit;}
+  input,textarea{font-family:inherit;color:inherit;}
   a{color:inherit;text-decoration:none;}
 
   /* ─── Layout ──────────────────────────────────────────────────── */
-  .app{max-width:560px;margin:0 auto;padding:20px 18px 24px;}
+  .app{max-width:560px;margin:0 auto;padding:20px 18px 28px;}
+  .app-page{animation:fadein .18s ease both;}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
   .stack > * + *{margin-top:14px;}
   .row{display:flex;align-items:center;gap:10px;}
   .row-between{display:flex;align-items:center;justify-content:space-between;gap:10px;}
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
   .mut{color:var(--mut);}
   .small{font-size:12px;}
   .tiny{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);}
@@ -70,7 +72,6 @@
     padding:16px;
     box-shadow:0 2px 24px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.03);
   }
-  .card-elev{background:var(--card-elev);}
   .gold-grad{
     background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
@@ -80,32 +81,32 @@
     padding:4px 10px;border-radius:999px;
     background:rgba(255,255,255,.04);border:1px solid var(--border);
     font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);
+    white-space:nowrap;
   }
   .pill.gold{color:var(--gold);border-color:var(--border-hi);}
-  .divider{height:1px;background:var(--border);margin:14px 0;}
+  .pill.grn{color:var(--grn);border-color:oklch(.7 .14 145 / .35);}
 
   /* ─── Header ──────────────────────────────────────────────────── */
-  header.brand{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;}
-  .brand-title{font-family:var(--font-display);font-size:22px;letter-spacing:.18em;}
+  header.brand{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;gap:12px;}
+  .brand-title{font-family:var(--font-display);font-size:22px;letter-spacing:.18em;flex-shrink:0;}
   .brand-title em{font-style:normal;}
 
   /* ─── Rank ring ───────────────────────────────────────────────── */
   .ring{
-    position:relative;width:104px;height:104px;border-radius:50%;
+    position:relative;width:104px;height:104px;border-radius:50%;flex-shrink:0;
     background:conic-gradient(var(--gold) calc(var(--p,0)*1%),rgba(255,255,255,.04) 0);
     display:flex;align-items:center;justify-content:center;
     box-shadow:0 0 0 1px var(--border-hi),0 0 24px oklch(.78 .13 80 / .14);
+    transition:background .4s;
   }
-  .ring::after{
-    content:"";position:absolute;inset:6px;border-radius:50%;background:var(--card);
-  }
+  .ring::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--card);}
   .ring > div{position:relative;z-index:1;text-align:center;}
   .ring .rank{font-family:var(--font-display);font-size:32px;line-height:1;}
   .ring .lbl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin-top:4px;}
 
   /* ─── Bars ────────────────────────────────────────────────────── */
   .bar{height:6px;border-radius:999px;background:rgba(255,255,255,.05);overflow:hidden;}
-  .bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));}
+  .bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .3s;}
 
   /* ─── Checklist ───────────────────────────────────────────────── */
   .check{
@@ -114,10 +115,12 @@
     border:1px solid var(--border);transition:border-color .15s,background .15s;
   }
   .check:hover{border-color:var(--border-hi);}
+  .check:active{background:rgba(255,255,255,.04);}
   .check.done{background:rgba(212,176,90,.07);border-color:var(--border-hi);}
   .check .box{
     flex:none;width:22px;height:22px;border-radius:6px;border:1.5px solid var(--mut-deep);
     display:flex;align-items:center;justify-content:center;margin-top:2px;
+    transition:background .15s,border-color .15s;
   }
   .check.done .box{background:var(--gold);border-color:var(--gold);color:var(--bg);}
   .check.done .box::after{content:"✓";font-weight:700;font-size:14px;}
@@ -131,19 +134,25 @@
     padding:10px 16px;border-radius:10px;font-family:var(--font-display);
     font-size:13px;letter-spacing:.14em;text-transform:uppercase;
     border:1px solid var(--border-hi);color:var(--cream);background:rgba(255,255,255,.02);
+    transition:background .14s,opacity .14s;
   }
   .btn:hover{background:rgba(255,255,255,.05);}
+  .btn:active{opacity:.8;}
   .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--bg);border-color:transparent;}
+  .btn-gold:hover{filter:brightness(1.06);}
   .btn-ghost{border-color:var(--border);color:var(--mut);}
   .btn-danger{border-color:rgba(180,60,40,.4);color:var(--red);}
 
   /* ─── Inputs ──────────────────────────────────────────────────── */
   .inp{
     width:100%;padding:10px 12px;border-radius:10px;
-    background:rgba(0,0,0,.25);border:1px solid var(--border);color:var(--cream);
+    background:rgba(0,0,0,.3);border:1px solid var(--border);color:var(--cream);
     font-family:var(--font-serif);font-size:14px;outline:none;
+    -webkit-appearance:none;appearance:none;
   }
-  .inp:focus{border-color:var(--border-hi);}
+  .inp:focus{border-color:var(--border-hi);box-shadow:0 0 0 3px oklch(.78 .13 80 / .08);}
+  /* Fix select on Safari — force dark bg */
+  select.inp{background-color:oklch(.18 .013 62);color-scheme:dark;}
   label.lbl{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-bottom:6px;}
 
   /* ─── Facet tile ──────────────────────────────────────────────── */
@@ -151,15 +160,16 @@
   .facet .numeral{font-family:var(--font-display);font-size:22px;color:var(--gold);min-width:30px;}
   .facet .name{font-family:var(--font-display);font-size:15px;}
   .facet .tag{font-size:12px;color:var(--mut);font-style:italic;margin-top:2px;}
-  /* ─── Stepper (replaces sliders) ─────────────────────────────── */
-  .stepper{display:flex;align-items:center;gap:0;margin-top:10px;width:100%;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:rgba(0,0,0,.2);}
-  .stepper__btn{flex:none;width:46px;height:44px;display:flex;align-items:center;justify-content:center;font-size:20px;font-family:var(--font-display);color:var(--gold);background:rgba(255,255,255,.03);border:none;cursor:pointer;user-select:none;-webkit-user-select:none;transition:background .12s;}
+
+  /* ─── Stepper ─────────────────────────────────────────────────── */
+  .stepper{display:flex;align-items:center;margin-top:10px;width:100%;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:rgba(0,0,0,.2);}
+  .stepper__btn{flex:none;width:48px;height:46px;display:flex;align-items:center;justify-content:center;font-size:22px;font-family:var(--font-display);color:var(--gold);background:rgba(255,255,255,.03);border:none;cursor:pointer;user-select:none;-webkit-user-select:none;transition:background .12s;}
   .stepper__btn:hover{background:rgba(212,176,90,.12);}
-  .stepper__btn:active{background:rgba(212,176,90,.22);}
-  .stepper__track{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 4px;}
-  .stepper__val{font-family:var(--font-mono);font-size:16px;color:var(--gold-bright);line-height:1;}
-  .stepper__bar{width:100%;height:3px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;}
-  .stepper__fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .15s;}
+  .stepper__btn:active{background:rgba(212,176,90,.24);}
+  .stepper__track{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;}
+  .stepper__val{font-family:var(--font-mono);font-size:18px;color:var(--gold-bright);line-height:1;font-variant-numeric:tabular-nums;}
+  .stepper__bar{width:80%;height:3px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;}
+  .stepper__fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .2s;}
 
   /* ─── Code lines ──────────────────────────────────────────────── */
   .code-line{
@@ -169,12 +179,15 @@
   }
   .code-line + .code-line{margin-top:8px;}
 
-  /* ─── Bucket bar ──────────────────────────────────────────────── */
-  .bucket{display:flex;justify-content:space-between;align-items:center;padding:10px 0;}
+  /* ─── Buckets ─────────────────────────────────────────────────── */
+  .bucket{display:flex;justify-content:space-between;align-items:center;padding:10px 0;gap:10px;}
   .bucket + .bucket{border-top:1px solid var(--border);}
+  .bucket .binfo{flex:1;min-width:0;}
   .bucket .name{font-family:var(--font-display);font-size:13px;letter-spacing:.06em;}
   .bucket .pct{font-size:11px;color:var(--mut);}
-  .bucket .amt{font-family:var(--font-mono);font-size:14px;color:var(--gold);}
+  .bucket .amt{font-family:var(--font-mono);font-size:14px;color:var(--gold);flex-shrink:0;}
+  .bucket .bbar{height:3px;border-radius:999px;background:rgba(255,255,255,.06);margin-top:4px;overflow:hidden;}
+  .bucket .bbar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--gold-bright));}
 
   /* ─── Rank list ───────────────────────────────────────────────── */
   .rank-row{display:flex;gap:12px;padding:14px;border-radius:14px;border:1px solid var(--border);background:var(--card);}
@@ -190,55 +203,101 @@
   /* ─── Bottom nav ──────────────────────────────────────────────── */
   nav.bottom{
     position:fixed;left:0;right:0;bottom:0;z-index:50;
-    background:rgba(20,16,10,.92);backdrop-filter:blur(18px);
+    background:oklch(.16 .012 60 / .94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
     border-top:1px solid var(--border);
-    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
   }
-  nav.bottom ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);max-width:560px;margin:0 auto;}
+  nav.bottom ul{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(5,1fr);max-width:560px;}
   nav.bottom button{
-    width:100%;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;
-    font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);
+    width:100%;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;
+    font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);
+    transition:color .15s;
   }
   nav.bottom button.active{color:var(--gold);}
-  nav.bottom .ico{font-family:var(--font-display);font-size:14px;}
+  nav.bottom .ico{font-family:var(--font-display);font-size:14px;display:block;line-height:1.3;}
+  nav.bottom button.active .ico-dot{display:block;}
+  .ico-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);margin:0 auto;display:none;}
 
-  /* ─── Income entry list ───────────────────────────────────────── */
+  /* ─── Income list ─────────────────────────────────────────────── */
   .inc{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border);}
   .inc:first-child{border-top:0;}
-  .inc .meta{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;}
+  .inc .iname{font-family:var(--font-display);font-size:13px;}
+  .inc .meta{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
   .inc .amt{font-family:var(--font-mono);color:var(--gold);font-size:14px;}
-  .inc .del{font-size:11px;color:var(--red);margin-left:8px;padding:4px 8px;border-radius:6px;border:1px solid rgba(180,60,40,.3);}
+  .inc .del{font-size:11px;color:var(--red);margin-left:10px;padding:4px 10px;border-radius:6px;border:1px solid rgba(180,60,40,.3);transition:background .12s;}
+  .inc .del:hover{background:rgba(180,60,40,.12);}
+
+  /* ─── Stream tags ─────────────────────────────────────────────── */
+  .stream-tag{display:inline-flex;padding:2px 8px;border-radius:4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:rgba(212,176,90,.1);color:var(--gold);border:1px solid var(--border-hi);}
+  .stream-tag.tutoring{background:rgba(100,160,220,.08);color:var(--blu);border-color:oklch(.62 .13 250 / .3);}
+  .stream-tag.content{background:rgba(100,200,130,.06);color:var(--grn);border-color:oklch(.7 .14 145 / .3);}
+  .stream-tag.other{background:rgba(255,255,255,.04);color:var(--mut);border-color:var(--border);}
 
   /* ─── Misc ────────────────────────────────────────────────────── */
   .hr-rule{height:1px;background:linear-gradient(90deg,transparent,var(--border-hi),transparent);margin:18px 0;}
   .scroll-x{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;}
   .scroll-x::-webkit-scrollbar{display:none;}
-  .chip{flex:none;padding:6px 12px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--mut);}
+  .chip{flex:none;padding:6px 14px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--mut);font-family:var(--font-display);letter-spacing:.06em;transition:all .14s;}
   .chip.on{color:var(--gold);border-color:var(--border-hi);background:rgba(212,176,90,.06);}
   .ul-clean{list-style:none;padding:0;margin:0;}
   .ul-clean li{padding:6px 0;font-size:13px;color:var(--cream);position:relative;padding-left:14px;}
   .ul-clean li::before{content:"•";color:var(--gold);position:absolute;left:0;top:6px;}
+  .divider{height:1px;background:var(--border);margin:14px 0;}
+
+  /* ─── Toast ───────────────────────────────────────────────────── */
+  #toast{
+    position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:50%;transform:translateX(-50%) translateY(-10px);
+    background:var(--card-elev);border:1px solid var(--border-hi);
+    color:var(--cream);padding:10px 18px;border-radius:10px;font-size:13px;
+    box-shadow:0 8px 32px rgba(0,0,0,.6);z-index:200;
+    opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+    white-space:nowrap;font-family:var(--font-display);letter-spacing:.06em;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  #toast.toast-err{border-color:rgba(180,60,40,.5);color:var(--red);}
+
+  /* ─── Confirm overlay ─────────────────────────────────────────── */
+  .confirm-box{
+    margin-top:12px;padding:12px;border-radius:10px;
+    background:rgba(180,60,40,.06);border:1px solid rgba(180,60,40,.3);
+    display:none;
+  }
+  .confirm-box.show{display:block;}
+  .confirm-box p{font-size:13px;color:var(--cream);margin-bottom:10px;}
+  .confirm-box .row{gap:8px;}
+
+  /* ─── Quote card ──────────────────────────────────────────────── */
+  .quote-card{
+    border-left:3px solid var(--gold);padding:12px 14px;
+    background:rgba(212,176,90,.04);border-radius:0 10px 10px 0;
+    font-style:italic;font-size:15px;color:var(--cream);line-height:1.55;
+  }
+
+  /* ─── Vault stats ─────────────────────────────────────────────── */
+  .stat-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--border);}
+  .stat-row:first-child{border-top:0;padding-top:0;}
 </style>
 </head>
 <body>
 <div class="app" id="app"></div>
+<div id="toast"></div>
 
 <nav class="bottom">
   <ul id="nav">
-    <li><button data-tab="home"><span class="ico">☉</span>Home</button></li>
-    <li><button data-tab="system"><span class="ico">VII</span>System</button></li>
-    <li><button data-tab="money"><span class="ico">₦</span>Money</button></li>
-    <li><button data-tab="rank"><span class="ico">S</span>Rank</button></li>
-    <li><button data-tab="vault"><span class="ico">◈</span>Vault</button></li>
+    <li><button data-tab="home"><span class="ico">☉</span>Home<span class="ico-dot"></span></button></li>
+    <li><button data-tab="system"><span class="ico">VII</span>System<span class="ico-dot"></span></button></li>
+    <li><button data-tab="money"><span class="ico">₦</span>Money<span class="ico-dot"></span></button></li>
+    <li><button data-tab="rank"><span class="ico">S</span>Rank<span class="ico-dot"></span></button></li>
+    <li><button data-tab="vault"><span class="ico">◈</span>Vault<span class="ico-dot"></span></button></li>
   </ul>
 </nav>
 
 <script>
-/* ============================================================
+/* ================================================================
    APOLLO SYSTEM — single-file PWA
-   ============================================================ */
+   ================================================================ */
 
-// ─── DATA ─────────────────────────────────────────────────────
+// ─── DATA ─────────────────────────────────────────────────────────
 const FACETS=[
  {key:"mind",numeral:"I",name:"The Mind",tagline:"Philosophical depth. The architecture of thought.",
   philosophy:"Your mind is the architecture within which everything else operates. Weak architecture reacts. Strong architecture generates.",
@@ -347,92 +406,192 @@ const CIRCLE=[
  ["The Cut","People who cost you energy and return nothing. Distance, then absence."]
 ];
 
-// ─── STATE ────────────────────────────────────────────────────
+// ─── STATE ────────────────────────────────────────────────────────
 const KEY="apollo.state.v2";
-const todayISO=()=>new Date().toISOString().slice(0,10);
+
+// Use local date string (YYYY-MM-DD) in the device's local timezone — avoids
+// UTC-midnight drift that makes streaks break at midnight in UTC+2.
+function todayISO(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+function fmtDate(iso){
+  if(!iso)return"";
+  const [y,m,d]=iso.split("-").map(Number);
+  return new Date(y,m-1,d).toLocaleDateString("en-NA",{weekday:"short",month:"short",day:"numeric"});
+}
+
 const initial={
   rank:"E",
   facets:Object.fromEntries(FACETS.map(f=>[f.key,5])),
-  daily:{},      // {dateISO:{blocks:{id:bool}}}
+  daily:{},
   codeCheck:{},
-  income:[],     // {id,date,stream,amount,note}
+  income:[],
   buckets:{brand:0,ops:0,invest:0,buffer:0,personal:0},
   streak:{current:0,best:0,lastDate:null},
-  rankCond:{}    // "E:0":true
+  rankCond:{}
 };
 
 function load(){
-  try{const r=localStorage.getItem(KEY);if(!r)return structuredClone(initial);
-    const p=JSON.parse(r);return Object.assign(structuredClone(initial),p,{
+  try{
+    const r=localStorage.getItem(KEY);
+    if(!r)return structuredClone(initial);
+    const p=JSON.parse(r);
+    return Object.assign(structuredClone(initial),p,{
       facets:Object.assign({},initial.facets,p.facets||{}),
       buckets:Object.assign({},initial.buckets,p.buckets||{})
-    });}
-  catch(e){return structuredClone(initial);}
+    });
+  }catch(e){return structuredClone(initial);}
 }
 function save(){localStorage.setItem(KEY,JSON.stringify(state));}
 let state=load();
-let tab=location.hash.replace("#","")||"home";
+let tab=(location.hash.replace("#","")||"home");
+if(!["home","system","money","rank","vault"].includes(tab))tab="home";
 
-// ─── ACTIONS ──────────────────────────────────────────────────
-function setFacet(k,v,skipRender){state.facets[k]=Math.max(0,Math.min(100,v|0));save();if(!skipRender)render();}
+// ─── TOAST ────────────────────────────────────────────────────────
+let _toastTimer=null;
+function toast(msg,isErr=false){
+  const el=document.getElementById("toast");
+  if(!el)return;
+  el.textContent=msg;
+  el.className="show"+(isErr?" toast-err":"");
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>{el.className="";},2200);
+}
+
+// ─── STREAK HELPERS ───────────────────────────────────────────────
+function prevDay(iso){
+  const [y,m,d]=iso.split("-").map(Number);
+  const dt=new Date(y,m-1,d);
+  dt.setDate(dt.getDate()-1);
+  return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+}
+
+function recomputeStreak(){
+  // After unchecking a block, recalculate streak from scratch across stored days
+  const today=todayISO();
+  const days=Object.keys(state.daily).sort().reverse();
+  let cur=0,best=state.streak.best,lastDate=null;
+  let cursor=today;
+  for(const day of days){
+    if(day>today)continue;
+    const done=Object.values(state.daily[day]?.blocks||{}).filter(Boolean).length;
+    if(done>=7){
+      if(day===cursor){cur++;lastDate=lastDate||day;cursor=prevDay(cursor);}
+      else if(day<cursor)break;
+    }
+  }
+  best=Math.max(best,cur);
+  state.streak={current:cur,best,lastDate};
+}
+
+// ─── ACTIONS ──────────────────────────────────────────────────────
+function setFacet(k,v,skipRender){
+  state.facets[k]=Math.max(0,Math.min(100,v|0));
+  save();
+  if(!skipRender)render();
+}
+
 function toggleBlock(id){
   const d=todayISO();
   state.daily[d]=state.daily[d]||{blocks:{}};
-  state.daily[d].blocks[id]=!state.daily[d].blocks[id];
-  const done=Object.values(state.daily[d].blocks).filter(Boolean).length>=7;
-  if(done && state.streak.lastDate!==d){
-    const y=new Date();y.setDate(y.getDate()-1);
-    const yi=y.toISOString().slice(0,10);
-    const cur=state.streak.lastDate===yi?state.streak.current+1:1;
+  const wasOn=!!state.daily[d].blocks[id];
+  state.daily[d].blocks[id]=!wasOn;
+  const doneCt=Object.values(state.daily[d].blocks).filter(Boolean).length;
+  if(!wasOn && doneCt===7){
+    // Just hit 7 — update streak forward
+    const yesterday=prevDay(d);
+    const cur=state.streak.lastDate===yesterday?state.streak.current+1:
+               state.streak.lastDate===d?state.streak.current:1;
     state.streak={current:cur,best:Math.max(state.streak.best,cur),lastDate:d};
+  } else if(wasOn && doneCt===6){
+    // Dropped below 7 — recompute fully
+    recomputeStreak();
   }
   save();render();
 }
+
 function toggleCode(){const d=todayISO();state.codeCheck[d]=!state.codeCheck[d];save();render();}
-function addIncome(stream,amount,note){
-  if(!amount||amount<=0)return;
+
+function addIncome(stream,amountStr,note){
+  const amount=parseFloat(String(amountStr).replace(/,/g,"."));
+  if(!amount||amount<=0){toast("Enter a valid amount",true);return;}
   const id=Math.random().toString(36).slice(2,10);
   state.income.unshift({id,date:todayISO(),stream,amount,note:note||""});
   state.income=state.income.slice(0,500);
   BUCKETS.forEach(b=>state.buckets[b.key]=(state.buckets[b.key]||0)+amount*b.pct/100);
   save();render();
+  toast("N$"+amount.toLocaleString("en-NA",{maximumFractionDigits:0})+" logged ✓");
 }
+
 function removeIncome(id){
   const t=state.income.find(e=>e.id===id);if(!t)return;
   BUCKETS.forEach(b=>state.buckets[b.key]=Math.max(0,(state.buckets[b.key]||0)-t.amount*b.pct/100));
-  state.income=state.income.filter(e=>e.id!==id);save();render();
+  state.income=state.income.filter(e=>e.id!==id);
+  save();render();
+  toast("Entry removed");
 }
+
 function setRank(k){state.rank=k;save();render();}
 function toggleRankCond(k,i){const key=k+":"+i;state.rankCond[key]=!state.rankCond[key];save();render();}
 
 function exportJSON(){
   const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download="apollo-state-"+todayISO()+".json";a.click();
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;
+  a.download="apollo-state-"+todayISO()+".json";
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},1000);
+  toast("Exported ✓");
 }
+
 function importJSON(file){
   const r=new FileReader();
-  r.onload=()=>{try{const p=JSON.parse(r.result);state=Object.assign(structuredClone(initial),p);save();render();alert("Imported.");}catch(e){alert("Import failed.");}};
+  r.onload=()=>{
+    try{
+      const p=JSON.parse(r.result);
+      state=Object.assign(structuredClone(initial),p,{
+        facets:Object.assign({},initial.facets,p.facets||{}),
+        buckets:Object.assign({},initial.buckets,p.buckets||{})
+      });
+      save();render();toast("Data imported ✓");
+    }catch(e){toast("Import failed — invalid file",true);}
+  };
   r.readAsText(file);
 }
-function resetAll(){if(confirm("Erase all Apollo data?")){state=structuredClone(initial);save();render();}}
 
-// ─── HELPERS ──────────────────────────────────────────────────
+function resetAll(){
+  state=structuredClone(initial);save();render();toast("All data cleared");
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────
 const $=(s,el=document)=>el.querySelector(s);
 const fmt=n=>"N$"+(n||0).toLocaleString("en-NA",{maximumFractionDigits:0});
 const todayBlocks=()=>(state.daily[todayISO()]?.blocks)||{};
 const overall=()=>{const v=Object.values(state.facets);return Math.round(v.reduce((a,b)=>a+b,0)/v.length);};
 const rankIdx=k=>RANKS.findIndex(r=>r.key===k);
 const totalIncome=()=>state.income.reduce((a,e)=>a+e.amount,0);
-const escape=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-// ─── VIEWS ────────────────────────────────────────────────────
+function streamTag(key){
+  const map={jewellery:"Jewellery",tutoring:"Tutoring",content:"Content",other:"Other"};
+  return `<span class="stream-tag ${key}">${map[key]||esc(key)}</span>`;
+}
+
+// ─── VIEWS ────────────────────────────────────────────────────────
 function viewHome(){
   const blocks=todayBlocks();
   const done=Object.values(blocks).filter(Boolean).length;
   const pct=Math.round(done/DAILY.length*100);
   const codeDone=state.codeCheck[todayISO()];
-  return `
+  const quote=THE_CODE[new Date().getDay()%THE_CODE.length];
+  // Streak validity: if lastDate isn't today or yesterday, streak is visually broken
+  const today=todayISO(),yesterday=prevDay(today);
+  const streakLive=state.streak.lastDate===today||state.streak.lastDate===yesterday;
+  const streakCur=streakLive?state.streak.current:0;
+
+  return `<div class="app-page">
     <header class="brand">
       <div class="brand-title">APOLLO <em class="gold-grad">·</em> SYSTEM</div>
       <div class="pill gold">RANK ${state.rank}</div>
@@ -443,12 +602,15 @@ function viewHome(){
         <div class="ring" style="--p:${pct}">
           <div><div class="rank gold-grad">${state.rank}</div><div class="lbl">Today ${pct}%</div></div>
         </div>
-        <div style="flex:1;">
+        <div style="flex:1;min-width:0;">
           <div class="tiny">Daily Architecture</div>
           <div style="font-family:var(--font-display);font-size:18px;margin-top:4px;">${done} / ${DAILY.length} complete</div>
           <div class="bar" style="margin-top:10px;"><span style="width:${pct}%"></span></div>
-          <div class="row" style="margin-top:12px;gap:14px;">
-            <div><div class="tiny">Streak</div><div class="num" style="color:var(--gold);font-size:18px;">${state.streak.current}d</div></div>
+          <div class="row" style="margin-top:12px;gap:18px;">
+            <div>
+              <div class="tiny">Streak</div>
+              <div class="num" style="color:${streakCur>0?'var(--gold)':'var(--mut)'};font-size:18px;">${streakCur}d</div>
+            </div>
             <div><div class="tiny">Best</div><div class="num" style="font-size:18px;">${state.streak.best}d</div></div>
             <div><div class="tiny">Overall</div><div class="num" style="font-size:18px;">${overall()}</div></div>
           </div>
@@ -457,9 +619,14 @@ function viewHome(){
     </div>
 
     <div class="card">
+      <div class="tiny" style="margin-bottom:10px;">Today's Word</div>
+      <div class="quote-card">${quote}</div>
+    </div>
+
+    <div class="card">
       <div class="row-between" style="margin-bottom:12px;">
         <div><div class="tiny">The Daily Architecture</div><h3 style="font-size:18px;margin-top:4px;">Today's Protocol</h3></div>
-        <div class="pill">${todayISO()}</div>
+        <div class="pill">${fmtDate(todayISO())}</div>
       </div>
       <div class="stack">
         ${DAILY.map(b=>`
@@ -481,34 +648,38 @@ function viewHome(){
       </div>
       ${THE_CODE.map(l=>`<div class="code-line">${l}</div>`).join("")}
     </div>
-  `;
+  </div>`;
 }
 
 function viewSystem(){
-  return `
+  return `<div class="app-page">
     <header class="brand"><div class="brand-title">THE SEVEN <em class="gold-grad">·</em> FACETS</div><div class="pill">VII</div></header>
 
     <div class="card">
-      <div class="tiny">The System</div>
-      <h3 style="font-size:18px;margin-top:4px;">Seven facets. One man.</h3>
+      <div class="tiny">Overall Score</div>
+      <div class="row-between" style="margin-top:4px;">
+        <h3 style="font-size:18px;">Seven facets. One man.</h3>
+        <div class="num gold-grad" style="font-size:28px;">${overall()}</div>
+      </div>
+      <div class="bar" style="margin-top:10px;"><span style="width:${overall()}%"></span></div>
       <p class="mut small" style="margin-top:8px;">Mind, Craft, Body, Interior, Code, Knowledge, Aesthetic. Each rated 0–100 by you, honestly.</p>
     </div>
 
     ${FACETS.map(f=>`
       <div class="facet">
         <div class="numeral">${f.numeral}</div>
-        <div style="flex:1;">
+        <div style="flex:1;min-width:0;">
           <div class="row-between">
             <div><div class="name">${f.name}</div><div class="tag">${f.tagline}</div></div>
             <div class="num gold-grad" style="font-size:20px;" id="fval-${f.key}">${state.facets[f.key]}</div>
           </div>
           <div class="stepper">
-            <button class="stepper__btn" data-facet-dec="${f.key}">−</button>
+            <button class="stepper__btn" data-facet-dec="${f.key}" aria-label="Decrease ${f.name}">−</button>
             <div class="stepper__track">
               <div class="stepper__val" id="fnum-${f.key}">${state.facets[f.key]}</div>
               <div class="stepper__bar"><div class="stepper__fill" id="fbar-${f.key}" style="width:${state.facets[f.key]}%"></div></div>
             </div>
-            <button class="stepper__btn" data-facet-inc="${f.key}">+</button>
+            <button class="stepper__btn" data-facet-inc="${f.key}" aria-label="Increase ${f.name}">+</button>
           </div>
           <p class="small mut" style="margin-top:10px;">${f.philosophy}</p>
           <div class="tiny" style="margin-top:10px;">Daily Practice</div>
@@ -522,21 +693,36 @@ function viewSystem(){
       <div class="tiny">The Circle</div>
       <h3 style="font-size:18px;margin-top:4px;">Five roles. No others.</h3>
       <div class="stack" style="margin-top:12px;">
-        ${CIRCLE.map(([r,d])=>`<div><div style="font-family:var(--font-display);font-size:14px;color:var(--gold);">${r}</div><div class="small mut">${d}</div></div>`).join("")}
+        ${CIRCLE.map(([r,d])=>`
+          <div>
+            <div style="font-family:var(--font-display);font-size:14px;color:var(--gold);">${r}</div>
+            <div class="small mut">${d}</div>
+          </div>`).join("")}
       </div>
     </div>
-  `;
+  </div>`;
 }
 
 function viewMoney(){
   const tot=totalIncome();
-  return `
+  const maxBucket=Math.max(...BUCKETS.map(b=>state.buckets[b.key]||0),1);
+  // Per-stream breakdown
+  const byStream={};
+  state.income.forEach(e=>{byStream[e.stream]=(byStream[e.stream]||0)+e.amount;});
+
+  return `<div class="app-page">
     <header class="brand"><div class="brand-title">THE <em class="gold-grad">·</em> BLUEPRINT</div><div class="pill gold">${fmt(tot)}</div></header>
 
     <div class="card">
       <div class="tiny">Total Income Logged</div>
       <div class="gold-grad" style="font-family:var(--font-display);font-size:36px;margin-top:4px;">${fmt(tot)}</div>
-      <div class="mut small">${state.income.length} entries · auto-allocated across 5 buckets</div>
+      <div class="mut small" style="margin-top:4px;">${state.income.length} entr${state.income.length===1?'y':'ies'} · auto-allocated across 5 buckets</div>
+      ${Object.keys(byStream).length>0?`
+        <div class="divider"></div>
+        <div class="tiny" style="margin-bottom:8px;">By Stream</div>
+        <div class="row" style="gap:8px;flex-wrap:wrap;">
+          ${Object.entries(byStream).map(([k,v])=>`<div style="display:flex;align-items:center;gap:6px;">${streamTag(k)}<span class="num" style="font-size:12px;color:var(--gold);">${fmt(v)}</span></div>`).join("")}
+        </div>`:""}
     </div>
 
     <div class="card">
@@ -545,7 +731,10 @@ function viewMoney(){
       <div style="margin-top:8px;">
         ${BUCKETS.map(b=>`
           <div class="bucket">
-            <div><div class="name">${b.name}</div><div class="pct">${b.pct}%</div></div>
+            <div class="binfo">
+              <div class="row-between"><div class="name">${b.name}</div><div class="pct">${b.pct}%</div></div>
+              <div class="bbar"><div class="bbar-fill" style="width:${Math.round(((state.buckets[b.key]||0)/maxBucket)*100)}%"></div></div>
+            </div>
             <div class="amt">${fmt(state.buckets[b.key])}</div>
           </div>`).join("")}
       </div>
@@ -555,16 +744,24 @@ function viewMoney(){
       <div class="tiny">Log Income</div>
       <h3 style="font-size:16px;margin-top:4px;">Allocate the moment money arrives.</h3>
       <div class="stack" style="margin-top:12px;">
-        <div><label class="lbl">Stream</label>
+        <div>
+          <label class="lbl" for="incStream">Stream</label>
           <select class="inp" id="incStream">
             <option value="jewellery">Jewellery</option>
             <option value="tutoring">Tutoring</option>
             <option value="content">Content / Brand</option>
             <option value="other">Other</option>
-          </select></div>
-        <div><label class="lbl">Amount (NAD)</label><input class="inp" id="incAmount" type="number" inputmode="numeric" placeholder="0" /></div>
-        <div><label class="lbl">Note (optional)</label><input class="inp" id="incNote" placeholder="Client, drop, batch…" /></div>
-        <button class="btn btn-gold" id="incBtn">Log & Allocate</button>
+          </select>
+        </div>
+        <div>
+          <label class="lbl" for="incAmount">Amount (NAD)</label>
+          <input class="inp" id="incAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" />
+        </div>
+        <div>
+          <label class="lbl" for="incNote">Note (optional)</label>
+          <input class="inp" id="incNote" placeholder="Client, drop, batch…" maxlength="120" />
+        </div>
+        <button class="btn btn-gold" id="incBtn">Log &amp; Allocate</button>
       </div>
     </div>
 
@@ -573,41 +770,69 @@ function viewMoney(){
         <div class="tiny" style="margin-bottom:8px;">Recent Income</div>
         ${state.income.slice(0,20).map(e=>`
           <div class="inc">
-            <div><div style="font-family:var(--font-display);font-size:13px;">${e.stream}</div>
-              <div class="meta">${e.date}${e.note?' · '+escape(e.note):''}</div></div>
-            <div class="row"><div class="amt">${fmt(e.amount)}</div><button class="del" data-del="${e.id}">Remove</button></div>
+            <div>
+              <div class="row" style="gap:8px;align-items:center;">
+                <div class="iname">${esc(e.stream)}</div>
+                ${streamTag(e.stream)}
+              </div>
+              <div class="meta">${fmtDate(e.date)}${e.note?' · '+esc(e.note):''}</div>
+            </div>
+            <div class="row">
+              <div class="amt">${fmt(e.amount)}</div>
+              <button class="del" data-del="${e.id}">Remove</button>
+            </div>
           </div>`).join("")}
       </div>`:''}
 
     <div class="card">
       <div class="tiny">Three Streams</div>
       <div class="stack" style="margin-top:10px;">
-        ${STREAMS.map(s=>`<div>
-          <div class="row-between"><div style="font-family:var(--font-display);font-size:14px;">${s.name}</div><div class="pill">${s.margin} · ${s.yr1}</div></div>
-          <ul class="ul-clean">${s.plays.map(p=>`<li>${p}</li>`).join("")}</ul>
-        </div>`).join('<div class="hr-rule"></div>')}
+        ${STREAMS.map(s=>`
+          <div>
+            <div class="row-between">
+              <div style="font-family:var(--font-display);font-size:14px;">${s.name}</div>
+              <div class="pill">${s.margin} · ${s.yr1}</div>
+            </div>
+            <ul class="ul-clean">${s.plays.map(p=>`<li>${p}</li>`).join("")}</ul>
+          </div>`).join('<div class="hr-rule"></div>')}
       </div>
     </div>
 
     <div class="card">
       <div class="tiny">Wealth Roadmap</div>
       <div class="stack" style="margin-top:10px;">
-        ${ROADMAP.map(r=>`<div class="row-between"><div><div style="font-family:var(--font-display);color:var(--gold);">${r.y}</div><div class="small mut">${r.note}</div></div><div class="num">${r.inc}</div></div>`).join('<div class="hr-rule"></div>')}
+        ${ROADMAP.map(r=>`
+          <div class="row-between">
+            <div>
+              <div style="font-family:var(--font-display);color:var(--gold);">${r.y}</div>
+              <div class="small mut">${r.note}</div>
+            </div>
+            <div class="num" style="font-size:13px;">${r.inc}</div>
+          </div>`).join('<div class="hr-rule"></div>')}
       </div>
     </div>
 
     <div class="card">
       <div class="tiny">Three Wealth Rules</div>
       <div class="stack" style="margin-top:10px;">
-        ${RULES.map(r=>`<div><div style="font-family:var(--font-display);color:var(--gold);font-size:13px;">${r.n}. ${r.t}</div><p class="small mut" style="margin-top:4px;">${r.b}</p></div>`).join("")}
+        ${RULES.map(r=>`
+          <div>
+            <div style="font-family:var(--font-display);color:var(--gold);font-size:13px;">${r.n}. ${r.t}</div>
+            <p class="small mut" style="margin-top:4px;">${r.b}</p>
+          </div>`).join("")}
       </div>
     </div>
-  `;
+  </div>`;
 }
 
 function viewRank(){
   const ci=rankIdx(state.rank);
-  return `
+  // Count how many cond are ticked per rank
+  function condCount(rkey,total){
+    let n=0;for(let i=0;i<total;i++)if(state.rankCond[rkey+":"+i])n++;return n;
+  }
+
+  return `<div class="app-page">
     <header class="brand"><div class="brand-title">RANK <em class="gold-grad">·</em> PROGRESSION</div><div class="pill gold">CURRENT ${state.rank}</div></header>
 
     <div class="card">
@@ -617,28 +842,42 @@ function viewRank(){
       <p class="small mut" style="margin-top:10px;">E → D → C → B → A → S. Each rank graduates only when its conditions are honestly met.</p>
     </div>
 
-    ${RANKS.map((r,i)=>`
+    ${RANKS.map((r,i)=>{
+      const cc=condCount(r.key,r.grad.length);
+      const allDone=cc===r.grad.length;
+      return `
       <div class="rank-row ${r.key===state.rank?'active':''}">
         <div class="badge">${r.key}</div>
-        <div style="flex:1;">
+        <div style="flex:1;min-width:0;">
           <div class="row-between">
             <div style="font-family:var(--font-display);font-size:15px;">${r.title}</div>
             ${i<=ci?`<div class="pill gold">Reached</div>`:`<div class="pill">Locked</div>`}
           </div>
           <p class="small mut" style="margin-top:4px;">${r.summary}</p>
-          <div class="tiny" style="margin-top:10px;">Graduation Conditions</div>
-          <div class="stack" style="margin-top:6px;">
-            ${r.grad.map((g,gi)=>{const on=state.rankCond[r.key+":"+gi];return `
-              <button class="check ${on?'done':''}" data-rcond="${r.key}:${gi}"><span class="box"></span><span class="label" style="font-family:var(--font-serif);font-size:13px;">${g}</span></button>`;}).join("")}
+          <div class="row-between" style="margin-top:10px;margin-bottom:6px;">
+            <div class="tiny">Graduation Conditions</div>
+            <div class="tiny" style="color:${allDone?'var(--grn)':'var(--mut)'};">${cc}/${r.grad.length}</div>
+          </div>
+          <div class="stack">
+            ${r.grad.map((g,gi)=>{
+              const on=state.rankCond[r.key+":"+gi];
+              return `<button class="check ${on?'done':''}" data-rcond="${r.key}:${gi}">
+                <span class="box"></span>
+                <span class="label" style="font-family:var(--font-serif);font-size:13px;">${g}</span>
+              </button>`;
+            }).join("")}
           </div>
           ${r.key!==state.rank?`<button class="btn btn-ghost" data-setrank="${r.key}" style="margin-top:10px;width:100%;">Set as current rank</button>`:""}
         </div>
-      </div>`).join("")}
-  `;
+      </div>`;
+    }).join("")}
+  </div>`;
 }
 
 function viewVault(){
-  return `
+  const days=Object.keys(state.daily).length;
+  const checked=Object.values(state.rankCond).filter(Boolean).length;
+  return `<div class="app-page">
     <header class="brand"><div class="brand-title">THE <em class="gold-grad">·</em> VAULT</div><div class="pill">DATA</div></header>
 
     <div class="card">
@@ -647,35 +886,43 @@ function viewVault(){
       <p class="small mut" style="margin-top:6px;">No accounts. No cloud. Export to back up. Import to restore.</p>
       <div class="grid-2" style="margin-top:14px;">
         <button class="btn btn-gold" id="exp">Export JSON</button>
-        <label class="btn">Import JSON<input id="imp" type="file" accept="application/json" style="display:none" /></label>
+        <button class="btn" id="impTrigger">Import JSON</button>
+        <input id="imp" type="file" accept="application/json" style="display:none" />
       </div>
       <div class="hr-rule"></div>
-      <button class="btn btn-danger" id="rst" style="width:100%;">Reset all data</button>
+      <button class="btn btn-ghost" id="rstBtn" style="width:100%;">Reset all data…</button>
+      <div class="confirm-box" id="confirmBox">
+        <p>This permanently erases all Apollo data on this device. There is no undo.</p>
+        <div class="row">
+          <button class="btn btn-danger" id="rstConfirm" style="flex:1;">Erase everything</button>
+          <button class="btn btn-ghost" id="rstCancel" style="flex:1;">Cancel</button>
+        </div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="tiny">At a Glance</div>
-      <div class="stack" style="margin-top:10px;">
-        <div class="row-between"><span class="mut small">Rank</span><span class="num">${state.rank}</span></div>
-        <div class="row-between"><span class="mut small">Overall facet score</span><span class="num">${overall()}</span></div>
-        <div class="row-between"><span class="mut small">Current streak</span><span class="num">${state.streak.current}d</span></div>
-        <div class="row-between"><span class="mut small">Best streak</span><span class="num">${state.streak.best}d</span></div>
-        <div class="row-between"><span class="mut small">Income entries</span><span class="num">${state.income.length}</span></div>
-        <div class="row-between"><span class="mut small">Total income</span><span class="num">${fmt(totalIncome())}</span></div>
-      </div>
+      <div class="tiny" style="margin-bottom:10px;">At a Glance</div>
+      <div class="stat-row"><span class="mut small">Current rank</span><span class="num">${state.rank}</span></div>
+      <div class="stat-row"><span class="mut small">Overall facet score</span><span class="num">${overall()} / 100</span></div>
+      <div class="stat-row"><span class="mut small">Current streak</span><span class="num">${state.streak.current}d</span></div>
+      <div class="stat-row"><span class="mut small">Best streak</span><span class="num">${state.streak.best}d</span></div>
+      <div class="stat-row"><span class="mut small">Days tracked</span><span class="num">${days}</span></div>
+      <div class="stat-row"><span class="mut small">Income entries</span><span class="num">${state.income.length}</span></div>
+      <div class="stat-row"><span class="mut small">Total income logged</span><span class="num">${fmt(totalIncome())}</span></div>
+      <div class="stat-row"><span class="mut small">Rank conditions met</span><span class="num">${checked}</span></div>
     </div>
 
     <div class="card">
       <div class="tiny">The Apollo Code</div>
       <div class="stack" style="margin-top:10px;">${THE_CODE.map(l=>`<div class="code-line">${l}</div>`).join("")}</div>
     </div>
-  `;
+  </div>`;
 }
 
-// ─── RENDER ───────────────────────────────────────────────────
+// ─── RENDER ───────────────────────────────────────────────────────
 function render(){
-  const v={home:viewHome,system:viewSystem,money:viewMoney,rank:viewRank,vault:viewVault}[tab]||viewHome;
-  $("#app").innerHTML=v();
+  const views={home:viewHome,system:viewSystem,money:viewMoney,rank:viewRank,vault:viewVault};
+  $("#app").innerHTML=(views[tab]||viewHome)();
   document.querySelectorAll("#nav button").forEach(b=>{
     b.classList.toggle("active",b.dataset.tab===tab);
   });
@@ -684,35 +931,63 @@ function render(){
 }
 
 function bind(){
+  // Daily checklist
   document.querySelectorAll("[data-block]").forEach(el=>el.onclick=()=>toggleBlock(el.dataset.block));
-  // Stepper − buttons
+
+  // Facet steppers
   document.querySelectorAll("[data-facet-dec]").forEach(el=>el.onclick=()=>{
     const k=el.dataset.facetDec;
     setFacet(k,state.facets[k]-5,true);
     syncStepper(k);
   });
-  // Stepper + buttons
   document.querySelectorAll("[data-facet-inc]").forEach(el=>el.onclick=()=>{
     const k=el.dataset.facetInc;
     setFacet(k,state.facets[k]+5,true);
     syncStepper(k);
   });
-  // Rank chips: visual highlight only (don't mutate state.rank)
+
+  // Rank chips — visual browse only
   document.querySelectorAll("[data-rank]").forEach(el=>el.onclick=()=>{
     document.querySelectorAll("[data-rank]").forEach(c=>c.classList.remove("on"));
     el.classList.add("on");
   });
   document.querySelectorAll("[data-setrank]").forEach(el=>el.onclick=()=>setRank(el.dataset.setrank));
-  document.querySelectorAll("[data-rcond]").forEach(el=>el.onclick=()=>{const[k,i]=el.dataset.rcond.split(":");toggleRankCond(k,+i);});
+  document.querySelectorAll("[data-rcond]").forEach(el=>el.onclick=()=>{
+    const[k,i]=el.dataset.rcond.split(":");toggleRankCond(k,+i);
+  });
+
+  // Income
   document.querySelectorAll("[data-del]").forEach(el=>el.onclick=()=>removeIncome(el.dataset.del));
+  const ib=$("#incBtn");
+  if(ib){
+    const doLog=()=>{
+      const s=$("#incStream").value;
+      const a=$("#incAmount").value;
+      const n=$("#incNote").value;
+      addIncome(s,a,n);
+      // addIncome calls render() on success, so no need to clear manually
+    };
+    ib.onclick=doLog;
+    // Allow Enter in amount/note fields to submit
+    ["#incAmount","#incNote"].forEach(sel=>{
+      const el=$(sel);if(el)el.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();doLog();}};
+    });
+  }
+
+  // Code check
   const cb=$("#codeBtn");if(cb)cb.onclick=toggleCode;
-  const ib=$("#incBtn");if(ib)ib.onclick=()=>{
-    const s=$("#incStream").value,a=+$("#incAmount").value,n=$("#incNote").value;
-    if(a>0){addIncome(s,a,n);$("#incAmount").value="";$("#incNote").value="";}
-  };
+
+  // Vault
   const ex=$("#exp");if(ex)ex.onclick=exportJSON;
-  const im=$("#imp");if(im)im.onchange=e=>e.target.files[0]&&importJSON(e.target.files[0]);
-  const rs=$("#rst");if(rs)rs.onclick=resetAll;
+  const impT=$("#impTrigger");if(impT)impT.onclick=()=>$("#imp")&&$("#imp").click();
+  const im=$("#imp");if(im)im.onchange=e=>{if(e.target.files[0])importJSON(e.target.files[0]);};
+  const rstBtn=$("#rstBtn");if(rstBtn)rstBtn.onclick=()=>{
+    const box=$("#confirmBox");if(box)box.classList.toggle("show");
+  };
+  const rstConfirm=$("#rstConfirm");if(rstConfirm)rstConfirm.onclick=()=>resetAll();
+  const rstCancel=$("#rstCancel");if(rstCancel)rstCancel.onclick=()=>{
+    const box=$("#confirmBox");if(box)box.classList.remove("show");
+  };
 }
 
 function syncStepper(k){
@@ -725,16 +1000,20 @@ function syncStepper(k){
   if(val)val.textContent=v;
 }
 
+// ─── NAV ──────────────────────────────────────────────────────────
 document.querySelectorAll("#nav button").forEach(b=>{
   b.onclick=()=>{tab=b.dataset.tab;location.hash=tab;render();};
 });
-window.addEventListener("hashchange",()=>{tab=location.hash.replace("#","")||"home";render();});
+window.addEventListener("hashchange",()=>{
+  const t=location.hash.replace("#","");
+  if(["home","system","money","rank","vault"].includes(t)){tab=t;render();}
+});
 
 render();
 
-// ─── PWA REGISTRATION ─────────────────────────────────────────
+// ─── PWA ──────────────────────────────────────────────────────────
 if("serviceWorker" in navigator && location.protocol!=="file:"){
-  window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 }
 </script>
 </body>
