@@ -1,31 +1,17 @@
 {
-  "name": "Apotheosis",
-  "short_name": "Apotheosis",
-  "id": "/apotheosis/",
-  "start_url": "/apotheosis/",
-  "scope": "/apotheosis/",
+  "name": "Apollo System",
+  "short_name": "Apollo",
+  "description": "The Apollo System — 7 Facets, Rank progression, and the Financial Blueprint.",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#080604",
-  "theme_color": "#080604",
+  "background_color": "#1a140d",
+  "theme_color": "#1a140d",
+  "categories": ["lifestyle", "productivity"],
   "icons": [
-    {
-      "src": "/apotheosis/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/apotheosis/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/apotheosis/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
