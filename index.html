@@ -151,9 +151,15 @@
   .facet .numeral{font-family:var(--font-display);font-size:22px;color:var(--gold);min-width:30px;}
   .facet .name{font-family:var(--font-display);font-size:15px;}
   .facet .tag{font-size:12px;color:var(--mut);font-style:italic;margin-top:2px;}
-  .slider{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:999px;background:rgba(255,255,255,.08);outline:none;margin-top:10px;}
-  .slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);cursor:pointer;}
-  .slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);cursor:pointer;}
+  /* ─── Stepper (replaces sliders) ─────────────────────────────── */
+  .stepper{display:flex;align-items:center;gap:0;margin-top:10px;width:100%;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:rgba(0,0,0,.2);}
+  .stepper__btn{flex:none;width:46px;height:44px;display:flex;align-items:center;justify-content:center;font-size:20px;font-family:var(--font-display);color:var(--gold);background:rgba(255,255,255,.03);border:none;cursor:pointer;user-select:none;-webkit-user-select:none;transition:background .12s;}
+  .stepper__btn:hover{background:rgba(212,176,90,.12);}
+  .stepper__btn:active{background:rgba(212,176,90,.22);}
+  .stepper__track{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 4px;}
+  .stepper__val{font-family:var(--font-mono);font-size:16px;color:var(--gold-bright);line-height:1;}
+  .stepper__bar{width:100%;height:3px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;}
+  .stepper__fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .15s;}
 
   /* ─── Code lines ──────────────────────────────────────────────── */
   .code-line{
@@ -201,7 +207,7 @@
   .inc:first-child{border-top:0;}
   .inc .meta{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;}
   .inc .amt{font-family:var(--font-mono);color:var(--gold);font-size:14px;}
-  .inc .del{font-size:11px;color:var(--red);margin-left:8px;}
+  .inc .del{font-size:11px;color:var(--red);margin-left:8px;padding:4px 8px;border-radius:6px;border:1px solid rgba(180,60,40,.3);}
 
   /* ─── Misc ────────────────────────────────────────────────────── */
   .hr-rule{height:1px;background:linear-gradient(90deg,transparent,var(--border-hi),transparent);margin:18px 0;}
@@ -368,7 +374,7 @@ let state=load();
 let tab=location.hash.replace("#","")||"home";
 
 // ─── ACTIONS ──────────────────────────────────────────────────
-function setFacet(k,v){state.facets[k]=Math.max(0,Math.min(100,v|0));save();render();}
+function setFacet(k,v,skipRender){state.facets[k]=Math.max(0,Math.min(100,v|0));save();if(!skipRender)render();}
 function toggleBlock(id){
   const d=todayISO();
   state.daily[d]=state.daily[d]||{blocks:{}};
@@ -494,9 +500,16 @@ function viewSystem(){
         <div style="flex:1;">
           <div class="row-between">
             <div><div class="name">${f.name}</div><div class="tag">${f.tagline}</div></div>
-            <div class="num gold-grad" style="font-size:20px;">${state.facets[f.key]}</div>
+            <div class="num gold-grad" style="font-size:20px;" id="fval-${f.key}">${state.facets[f.key]}</div>
           </div>
-          <input class="slider" type="range" min="0" max="100" value="${state.facets[f.key]}" data-facet="${f.key}" />
+          <div class="stepper">
+            <button class="stepper__btn" data-facet-dec="${f.key}">−</button>
+            <div class="stepper__track">
+              <div class="stepper__val" id="fnum-${f.key}">${state.facets[f.key]}</div>
+              <div class="stepper__bar"><div class="stepper__fill" id="fbar-${f.key}" style="width:${state.facets[f.key]}%"></div></div>
+            </div>
+            <button class="stepper__btn" data-facet-inc="${f.key}">+</button>
+          </div>
           <p class="small mut" style="margin-top:10px;">${f.philosophy}</p>
           <div class="tiny" style="margin-top:10px;">Daily Practice</div>
           <ul class="ul-clean">${f.practice.map(p=>`<li>${p}</li>`).join("")}</ul>
@@ -672,19 +685,44 @@ function render(){
 
 function bind(){
   document.querySelectorAll("[data-block]").forEach(el=>el.onclick=()=>toggleBlock(el.dataset.block));
-  document.querySelectorAll("[data-facet]").forEach(el=>el.oninput=e=>setFacet(el.dataset.facet,+e.target.value));
-  document.querySelectorAll("[data-rank]").forEach(el=>el.onclick=()=>setRank(el.dataset.rank));
+  // Stepper − buttons
+  document.querySelectorAll("[data-facet-dec]").forEach(el=>el.onclick=()=>{
+    const k=el.dataset.facetDec;
+    setFacet(k,state.facets[k]-5,true);
+    syncStepper(k);
+  });
+  // Stepper + buttons
+  document.querySelectorAll("[data-facet-inc]").forEach(el=>el.onclick=()=>{
+    const k=el.dataset.facetInc;
+    setFacet(k,state.facets[k]+5,true);
+    syncStepper(k);
+  });
+  // Rank chips: visual highlight only (don't mutate state.rank)
+  document.querySelectorAll("[data-rank]").forEach(el=>el.onclick=()=>{
+    document.querySelectorAll("[data-rank]").forEach(c=>c.classList.remove("on"));
+    el.classList.add("on");
+  });
   document.querySelectorAll("[data-setrank]").forEach(el=>el.onclick=()=>setRank(el.dataset.setrank));
   document.querySelectorAll("[data-rcond]").forEach(el=>el.onclick=()=>{const[k,i]=el.dataset.rcond.split(":");toggleRankCond(k,+i);});
   document.querySelectorAll("[data-del]").forEach(el=>el.onclick=()=>removeIncome(el.dataset.del));
   const cb=$("#codeBtn");if(cb)cb.onclick=toggleCode;
   const ib=$("#incBtn");if(ib)ib.onclick=()=>{
     const s=$("#incStream").value,a=+$("#incAmount").value,n=$("#incNote").value;
-    addIncome(s,a,n);
+    if(a>0){addIncome(s,a,n);$("#incAmount").value="";$("#incNote").value="";}
   };
   const ex=$("#exp");if(ex)ex.onclick=exportJSON;
   const im=$("#imp");if(im)im.onchange=e=>e.target.files[0]&&importJSON(e.target.files[0]);
   const rs=$("#rst");if(rs)rs.onclick=resetAll;
+}
+
+function syncStepper(k){
+  const v=state.facets[k];
+  const num=document.getElementById("fnum-"+k);
+  const bar=document.getElementById("fbar-"+k);
+  const val=document.getElementById("fval-"+k);
+  if(num)num.textContent=v;
+  if(bar)bar.style.width=v+"%";
+  if(val)val.textContent=v;
 }
 
 document.querySelectorAll("#nav button").forEach(b=>{
